@@ -1,0 +1,566 @@
+\documentclass[twoside]{article}
+
+\usepackage[preprint]{aistats2027}
+\usepackage[round,authoryear]{natbib}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{url}
+
+\renewcommand{\bibname}{References}
+\renewcommand{\bibsection}{\subsubsection*{\bibname}}
+\bibliographystyle{apalike}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\E}{\mathbb E}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cX}{\mathcal X}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\err}{\operatorname{err}}
+\newcommand{\Ber}{\operatorname{Ber}}
+\newcommand{\Poi}{\operatorname{Poi}}
+\newcommand{\1}{\mathbf 1}
+
+\begin{document}
+\runningauthor{}
+
+\onecolumn
+\aistatstitle{Supplement: When Sharing Fails Under Massart Noise}
+
+\aistatsauthor{Pahan Dewasurendra}
+
+\aistatsaddress{Johns Hopkins University}
+
+\appendix
+
+\section{External-Atom Moment Pairs}
+\label{app:moment}
+
+We give complete details for the moment construction. Let
+\[
+ d\sigma(u)=\frac{du}{\pi\sqrt{1-u^2}},\qquad u\in(-1,1),
+\]
+and let $T_j$ be the degree-$j$ Chebyshev polynomial of the first kind. The
+orthonormal polynomials in $L_2(\sigma)$ are
+\[
+ \phi_0(u)=1,\qquad \phi_j(u)=\sqrt2T_j(u),\quad j\ge1.
+\]
+For $m\ge1$ and $z>1$, define
+\[
+ K_m(z)=\sum_{j=0}^m\phi_j(z)^2
+ =1+2\sum_{j=1}^mT_j(z)^2.
+\]
+
+\begin{lemma}[External-atom representation]
+\label{lem:app-moment}
+There is a probability measure $\nu_m$ supported on $[-1,1]$ such that
+\[
+ \sigma_1=K_m(z)^{-1}\delta_z+
+ (1-K_m(z)^{-1})\nu_m
+\]
+has the same moments as $\sigma$ through order $2m$. The atom mass
+$K_m(z)^{-1}$ is maximal.
+\end{lemma}
+
+\begin{proof}
+Let $w=K_m(z)^{-1}$. For a polynomial $P$ of degree at most $2m$, define
+\[
+ L(P)=\int_{-1}^1P(u)d\sigma(u)-wP(z).
+\]
+We first show that $L(P)\ge0$ whenever $P$ is nonnegative on $[-1,1]$.
+The univariate Markov--Lukacs representation gives
+\[
+ P(u)=s(u)^2+(1-u^2)t(u)^2
+\]
+for polynomials satisfying $\deg(s)\le m$ and $\deg(t)\le m-1$. This
+representation covers degree below $2m$ by allowing zero leading
+coefficients. See \citet[Proposition 2.5.1]{wu2020polynomial}.
+
+Expand $s=\sum_{j=0}^mc_j\phi_j$. Cauchy--Schwarz gives
+\begin{align}
+ s(z)^2
+ &=\left(\sum_{j=0}^mc_j\phi_j(z)\right)^2\notag\\
+ &\le\left(\sum_{j=0}^mc_j^2\right)
+ \left(\sum_{j=0}^m\phi_j(z)^2\right)
+ =K_m(z)\int s^2d\sigma.
+ \label{eq:app-kernel-cs}
+\end{align}
+Since $wK_m(z)=1$ and $z>1$,
+\begin{align*}
+ L(P)
+ &=\int s^2d\sigma-ws(z)^2
+ +\int(1-u^2)t(u)^2d\sigma\\
+ &\quad+w(z^2-1)t(z)^2\ge0.
+\end{align*}
+The truncated Riesz--Haviland theorem
+\citep[Theorem 2.5.2]{wu2020polynomial} now gives a nonnegative measure
+$\tau$ supported on $[-1,1]$ such that
+\[
+ L(P)=\int P\,d\tau
+\]
+for every polynomial of degree at most $2m$. Taking $P=1$ shows that
+$\tau([-1,1])=1-w$. Since $K_m(z)>1$, normalizing
+$\nu_m=\tau/(1-w)$ proves existence and moment equality.
+
+For maximality, suppose a probability measure with the same first $2m$
+moments has an atom of mass $w'$ at $z$ and all remaining mass on
+$[-1,1]$. Every degree-$m$ polynomial $s$ then satisfies
+\[
+ w's(z)^2\le\int s^2d\sigma.
+\]
+Take $s_z(u)=\sum_{j=0}^m\phi_j(z)\phi_j(u)$. Orthonormality gives
+$s_z(z)=K_m(z)$ and $\int s_z^2d\sigma=K_m(z)$. Therefore
+$w'\le1/K_m(z)$.
+\end{proof}
+
+\begin{lemma}[Closed form]
+\label{lem:kernel-form}
+If $A=\operatorname{arcosh}(z)$, then
+\[
+ K_m(z)=m+\frac12+\frac{\sinh((2m+1)A)}{2\sinh A}.
+\]
+For every fixed $z>1$, there are positive constants $c_z,C_z$ such that
+\[
+ c_ze^{2mA}\le K_m(z)\le C_ze^{2mA}
+\]
+for all $m\ge1$.
+\end{lemma}
+
+\begin{proof}
+Since $T_j(z)=\cosh(jA)$,
+\begin{align*}
+ K_m(z)
+ &=1+2\sum_{j=1}^m\cosh^2(jA)\\
+ &=m+1+\sum_{j=1}^m\cosh(2jA)\\
+ &=m+\frac12+\frac{\sinh((2m+1)A)}{2\sinh A}.
+\end{align*}
+The exponential comparison follows because $A>0$ is fixed.
+\end{proof}
+
+For the learning construction, apply the affine map
+\[
+ q=\frac{\eta}{2}(u+1).
+\]
+It sends $[-1,1]$ to $[0,\eta]$. The point $q=1-\eta$ corresponds to
+\[
+ z_\eta=\frac{2(1-\eta)}{\eta}-1>1.
+\]
+Let $\mu_0$ be the image of $\sigma$. Lemma~\ref{lem:app-moment} gives a
+probability measure $\widetilde\nu_m$ supported on $[0,\eta]$ such that
+\begin{equation}
+ \mu_1=w_m\delta_{1-\eta}+(1-w_m)\widetilde\nu_m,
+ \qquad w_m=K_m(z_\eta)^{-1},
+ \label{eq:app-bias-pair}
+\end{equation}
+matches moments through order $2m$ with $\mu_0$.
+
+\section{The Single-Source Experiment}
+\label{app:testing}
+
+Fix $d\ge1$ and $\alpha\in(0,1]$. The covariate domain is
+$\{0,1,\ldots,d\}$ with
+\[
+ p_X(0)=1-\alpha,
+ \qquad p_X(x)=\alpha/d\quad(x\in[d]).
+\]
+Set the bias at coordinate zero to any common value $q_0\in[0,\eta]$.
+Under hypothesis $h\in\{0,1\}$, first draw
+$q_1,\ldots,q_d$ independently from $\mu_h$. Keep this vector fixed, then
+draw each label from $Y\mid X=x\sim\Ber(q_x)$.
+
+\subsection{Poissonization}
+
+Let the number of observations be Poisson with mean $N$. For one light
+coordinate, write $S$ and $T$ for its zero-label and one-label counts. Given
+$q$, Poisson splitting gives
+\[
+ S\sim\Poi(\lambda(1-q)),
+ \qquad T\sim\Poi(\lambda q),
+ \qquad \lambda=N\alpha/d,
+\]
+independently. The mixed probability is
+\begin{equation}
+ Q_h(s,t)=\frac{e^{-\lambda}\lambda^{s+t}}{s!t!}
+ \E_{q\sim\mu_h}[q^t(1-q)^s].
+ \label{eq:app-count-law}
+\end{equation}
+
+\begin{lemma}[Poissonized total variation]
+\label{lem:app-tv}
+For the complete Poissonized observations,
+\[
+ \TV(\mathsf P_0^N,\mathsf P_1^N)
+ \le d\,\PP(\Poi(\lambda)\ge2m+1).
+\]
+In particular, if
+\begin{equation}
+ N\le N_0:=\frac{2m+1}{4e\alpha}
+ d^{\frac{2m}{2m+1}},
+ \label{eq:app-N0}
+\end{equation}
+then this total variation is at most $1/64$.
+\end{lemma}
+
+\begin{proof}
+For $s+t\le2m$, the expectation in \eqref{eq:app-count-law} is the
+expectation of a polynomial of degree at most $2m$. It is equal under the two
+moment-matching priors. Under either prior, $S+T\sim\Poi(\lambda)$ because its
+law does not depend on $q$. Hence the one-coordinate distance is at most
+$\PP(\Poi(\lambda)\ge2m+1)$.
+
+After integrating out the independent latent biases, the light-coordinate
+count pairs are independent. Product subadditivity gives the first claim. If
+$N\le N_0$, then
+\[
+ \lambda\le\frac{2m+1}{4e}d^{-1/(2m+1)}.
+\]
+The Poisson Chernoff bound yields
+\begin{align*}
+ d\,\PP(\Poi(\lambda)\ge2m+1)
+ &\le d\left(\frac{e\lambda}{2m+1}\right)^{2m+1}\\
+ &\le4^{-(2m+1)}\le\frac1{64}.
+\end{align*}
+The heavy-coordinate process is identical under both priors. Conditional on
+all counts, the ordering of observations is generated by a common Markov
+kernel. Thus the same bound applies to the full ordered data.
+\end{proof}
+
+\subsection{A fixed-budget lower bound}
+
+\begin{lemma}[De-Poissonization]
+\label{lem:depoisson}
+Assume $N_0\ge48$. Every test whose two error probabilities are at most $1/5$
+uses more than $N_0/4$ fixed-budget observations.
+\end{lemma}
+
+\begin{proof}
+Suppose a test uses at most $n\le N_0/4$ observations. In a Poisson experiment
+with mean $2\max\{n,12\}$, run the test on the first $n$ observations when
+they are available. Otherwise output a fair coin. The Poisson mean is at most
+$N_0$. A multiplicative lower-tail bound gives
+\[
+ \PP(\Poi(2\max\{n,12\})\ge n)\ge0.9.
+\]
+The Poissonized test has success probability at least
+\[
+ \frac12+0.9\left(\frac45-\frac12\right)>\frac34
+\]
+under both priors. Two distributions that admit such a test have total
+variation above $1/2$. This contradicts Lemma~\ref{lem:app-tv}.
+\end{proof}
+
+Combining \eqref{eq:app-N0} and Lemma~\ref{lem:depoisson}, every test requires
+at least
+\begin{equation}
+ L_m:=\frac{2m+1}{16e\alpha}
+ d^{\frac{2m}{2m+1}}
+ \label{eq:app-Lm}
+\end{equation}
+observations, once this quantity is larger than a universal constant.
+
+\section{Valid Massart Alternatives}
+\label{app:gap}
+
+Let $\gamma=1-2\eta$ and set
+\begin{equation}
+ \alpha=\frac{16\epsilon}{\gamma w_m}.
+ \label{eq:app-alpha}
+\end{equation}
+The first condition of the main theorem, with a sufficiently small universal
+constant, ensures $\alpha\le1$.
+
+Under the null, every light bias lies in $[0,\eta]$, so the zero function is
+Bayes optimal. Under the alternative, define
+\[
+ H=\sum_{x=1}^d\1\{q_x=1-\eta\}.
+\]
+Then $H\sim\operatorname{Bin}(d,w_m)$. Let
+\begin{equation}
+ \mathcal A=\{dw_m/2\le H\le2dw_m\}.
+ \label{eq:app-A}
+\end{equation}
+
+\begin{lemma}[Gap event]
+\label{lem:gap-event}
+If $dw_m\ge64$, then $\PP(\mathcal A)\ge0.99$. On $\mathcal A$, the Bayes
+classifier is the indicator of the high coordinates, and the excess error of
+zero satisfies
+\[
+ 8\epsilon\le\Delta_0\le32\epsilon.
+\]
+Its disagreement probability with Bayes is at most $32\epsilon/\gamma$.
+\end{lemma}
+
+\begin{proof}
+The two-sided multiplicative Chernoff bound gives
+\[
+ \PP(\mathcal A^c)
+ \le e^{-dw_m/8}+e^{-dw_m/3}<0.01.
+\]
+The only points where zero differs from Bayes are the $H$ high coordinates.
+Every such point has label margin $2(1-\eta)-1=\gamma$. Therefore
+\[
+ \Delta_0=\frac{\alpha\gamma H}{d}.
+\]
+Substituting \eqref{eq:app-alpha} and the bounds in
+\eqref{eq:app-A} proves the excess interval. The disagreement mass is
+$\alpha H/d\le2\alpha w_m=32\epsilon/\gamma$.
+\end{proof}
+
+Substitution into \eqref{eq:app-Lm} gives
+\begin{equation}
+ L_m=\frac{(2m+1)\gamma w_m}{256e\epsilon}
+ d^{\frac{2m}{2m+1}}.
+ \label{eq:app-Lm-final}
+\end{equation}
+
+\section{The Variance-Sensitive Holdout}
+\label{app:holdout}
+
+The next result is stated conditionally on any fixed valid environment and
+any fixed output predictor. It therefore remains valid after conditioning on
+the learner's transcript.
+
+\begin{lemma}[Holdout test]
+\label{lem:holdout}
+Let $f^\star$ be a Bayes classifier satisfying the Massart condition with
+margin lower bound $\gamma$. Let $\widehat f$ have excess error at most
+$\epsilon$, and let $f_0$ be zero. Under a null environment where
+$f_0=f^\star$, define
+\[
+ D=\err(f_0)-\err(\widehat f).
+\]
+Then $D\in[-\epsilon,0]$. Under an alternative in $\mathcal A$,
+$D\ge7\epsilon$. In both cases, the empirical difference from
+\begin{equation}
+ M=\left\lceil
+ \frac{20\log(2/\delta_v)}{\gamma\epsilon}
+ \right\rceil
+ \label{eq:app-M}
+\end{equation}
+fresh samples is within $2\epsilon$ of $D$ with probability at least
+$1-\delta_v$. Hence thresholding it at $3\epsilon$ distinguishes the cases.
+\end{lemma}
+
+\begin{proof}
+For every predictor $f$, the pointwise Massart identity gives
+\[
+ \err(f)-\err(f^\star)
+ =\E[(1-2\eta^\star(X))\1\{f(X)\ne f^\star(X)\}],
+\]
+where $\eta^\star(X)\le\eta$. Thus an $\epsilon$-optimal predictor obeys
+\begin{equation}
+ \PP(\widehat f(X)\ne f^\star(X))\le\epsilon/\gamma.
+ \label{eq:app-disagree}
+\end{equation}
+Under the null, $f_0=f^\star$, which proves $D\in[-\epsilon,0]$. Under an
+alternative in $\mathcal A$,
+\[
+ D=\Delta_0-(\err(\widehat f)-\err(f^\star))\ge7\epsilon.
+\]
+
+For a fresh sample let
+\[
+ Z=\1\{f_0(X)\ne Y\}-\1\{\widehat f(X)\ne Y\}.
+\]
+It vanishes whenever $f_0(X)=\widehat f(X)$. Under the null,
+$\operatorname{Var}(Z)\le\epsilon/\gamma$. Under the alternative, Lemma
+\ref{lem:gap-event} and \eqref{eq:app-disagree} give
+\[
+ \operatorname{Var}(Z)
+ \le\PP(f_0(X)\ne\widehat f(X))
+ \le33\epsilon/\gamma.
+\]
+Also $|Z-\E Z|\le2$. Bernstein's inequality yields
+\[
+ \PP(|\overline Z-D|>2\epsilon)
+ \le2\exp(-M\gamma\epsilon/20)\le\delta_v.
+\]
+The two claimed intervals are separated by the threshold $3\epsilon$.
+\end{proof}
+
+\section{Adaptive Multi-Source Lifting}
+\label{app:lifting}
+
+Let the covariate space be the disjoint union of $k$ blocks
+$\cX_1,\ldots,\cX_k$. Block $i$ has one heavy point $x_{i,0}$ and light
+points $x_{i,1},\ldots,x_{i,d}$. Define
+\begin{equation}
+ \cF=\{f_0\}\cup
+ \bigcup_{i=1}^k\{\1_S:S\subseteq\{x_{i,1},\ldots,x_{i,d}\}\}.
+ \label{eq:app-class}
+\end{equation}
+
+\begin{lemma}[VC dimension]
+\label{lem:vc}
+The class in \eqref{eq:app-class} has VC dimension exactly $d$.
+\end{lemma}
+
+\begin{proof}
+The $d$ light points in any one block are shattered. A set containing a heavy
+point cannot be shattered because every function labels that point zero. A
+set of $d+1$ light points must span at least two blocks. The labeling that is
+one on a point from each of two blocks is not realized by $\cF$.
+\end{proof}
+
+Source $i$ is supported on $\cX_i$ with mass $1-\alpha$ on $x_{i,0}$ and
+$\alpha/d$ on each light point. Set every heavy bias to a fixed value in
+$[0,\eta]$.
+
+Under the common null prior $\Pi_0$, independently draw every source's light
+bias vector from $\mu_0^d$. Each realization is a valid Massart instance with
+shared Bayes classifier $f_0$. For a fixed $i$, prior $\Pi_i$ replaces only
+source $i$ by $\mu_1^d$. Its high-coordinate indicator is in $\cF$ and equals
+zero on all other supports. It is therefore a shared Bayes classifier for
+every realization under $\Pi_i$.
+
+\begin{theorem}[Adaptive lifting]
+\label{thm:app-lifting}
+Suppose a personalized learner succeeds with probability at least $0.9$ on
+every valid instance. If
+\begin{equation}
+ m\gamma^2w_m d^{\frac{2m}{2m+1}}\ge C
+ \label{eq:app-domination}
+\end{equation}
+for a sufficiently large universal $C$, then under the common null
+\[
+ \E_{\Pi_0}[T_i]\ge L_m/100
+\]
+for every source $i$, where $T_i$ is its query count and $L_m$ is given by
+\eqref{eq:app-Lm-final}.
+\end{theorem}
+
+\begin{proof}
+Fix $i$ and suppose instead that $\E_{\Pi_0}[T_i]<L_m/100$. We build a test
+between the single-source priors from Appendix~\ref{app:testing}. Run the MDL
+learner. Whenever it queries source $i$, return a sample from the unknown
+testing oracle after shifting its covariate into block $i$. For each other
+source, independently draw a null bias vector once and simulate samples from
+that fixed environment.
+
+If the source-$i$ query count reaches $L_m/2$, stop and output alternative. If
+the learner terminates first, take the source-$i$ output and run the holdout
+test from Lemma~\ref{lem:holdout} with $\delta_v=0.02$.
+
+Under the null, Markov's inequality gives
+\[
+ \PP_{\Pi_0}(T_i\ge L_m/2)<0.02.
+\]
+The learner succeeds with probability at least $0.9$, including after
+averaging over the valid randomized null. Conditional on its transcript and
+success, the holdout accepts with probability at least $0.98$. A union bound
+shows that the constructed test accepts the null with probability above
+$0.8$.
+
+Under the alternative, truncation is a correct output. If truncation does not
+occur, the intersection of $\mathcal A$, learner success, and holdout success
+makes the test output alternative. This intersection has probability at
+least $0.99-0.1-0.02>0.8$. Pointwise correctness of the learner applies to
+every alternative realization, not only after conditioning on $\mathcal A$.
+
+The unknown-oracle budget is at most $L_m/2+M$. From
+\eqref{eq:app-Lm-final} and \eqref{eq:app-M}, condition
+\eqref{eq:app-domination} with a sufficiently large $C$ ensures
+$M\le L_m/4$. It also ensures $N_0=4L_m\ge48$. We have constructed a test
+using less than $L_m$ observations with both errors below $1/5$, contradicting
+Lemma~\ref{lem:depoisson}. Therefore $\E_{\Pi_0}[T_i]\ge L_m/100$.
+\end{proof}
+
+Summing Theorem~\ref{thm:app-lifting} over $i$ under the same null gives
+\begin{align*}
+ \E_{\Pi_0}\left[\sum_{i=1}^kT_i\right]
+ &\ge\frac{kL_m}{100}\\
+ &=\Omega\!\left(
+ \frac{k m\gamma w_m}{\epsilon}
+ d^{\frac{2m}{2m+1}}
+ \right).
+\end{align*}
+Since every realization in the support of $\Pi_0$ is valid, some fixed
+environment has at least this expected cost. This proves the main theorem for
+expected worst-case sample complexity. A deterministic worst-case sample cap
+is at least the same quantity.
+
+\section{Optimization and Comparison}
+\label{app:optimization}
+
+\subsection{Fixed exponent loss}
+
+Fix $\eta\in(0,1/2)$ and $\zeta>0$. Choose a fixed integer $m$ satisfying
+\[
+ \frac1{2m+1}\le\zeta.
+\]
+Then $w_m>0$ is a constant depending only on $\eta$ and $\zeta$. Choose
+$\epsilon\le c\gamma w_m$. For all sufficiently large $d$, the count and
+holdout conditions hold. The main theorem gives
+\[
+ \Omega_{\eta,\zeta}\!\left(
+ \frac{k}{\epsilon}d^{2m/(2m+1)}
+ \right)
+ =\Omega_{\eta,\zeta}\!\left(
+ \frac{k}{\epsilon}d^{1-\zeta}
+ \right).
+\]
+
+\subsection{Polynomial accuracy}
+
+Fix $\beta>0$ and suppose $\epsilon\le d^{-\beta}$. Write
+$D=\log d$ and $A=A_\eta>0$. Choose an integer $m$ such that
+\begin{equation}
+ 2m\asymp\sqrt{D/A}.
+ \label{eq:app-m-choice}
+\end{equation}
+For all sufficiently large $d$, Lemma~\ref{lem:kernel-form} gives
+\[
+ w_m\ge c_\eta\exp(-2mA).
+\]
+The accuracy condition holds because
+\[
+ \log(1/\epsilon)\ge\beta D
+ \gg2mA+O_\eta(1)=O_\eta(\sqrt D).
+\]
+Similarly,
+\[
+ dw_m\ge c_\eta\exp(D-O_\eta(\sqrt D))\longrightarrow\infty.
+\]
+For the holdout condition,
+\begin{align*}
+ m\gamma^2w_m d^{2m/(2m+1)}
+ &\ge c_\eta m\exp\left(
+ D-2mA-\frac{D}{2m+1}
+ \right)\\
+ &\ge\exp(D-O_\eta(\sqrt D))\longrightarrow\infty.
+\end{align*}
+Thus all conditions hold. The main lower bound is at least
+\begin{align*}
+ \frac{c_\eta kdm}{\epsilon}
+ \exp\left(-2mA-\frac{D}{2m+1}\right)
+ &\ge\frac{c_{\eta,\beta}kd}{\epsilon}
+ \exp(-C_\eta\sqrt{\log d}).
+\end{align*}
+
+\subsection{Separate empirical risk minimization}
+
+For completeness, the Massart identity used in
+\eqref{eq:app-disagree} also gives the Bernstein condition
+\[
+ \operatorname{Var}(\ell_f-\ell_{f^\star})
+ \le\frac{\err(f)-\err(f^\star)}{\gamma}.
+\]
+Standard localized VC empirical risk minimization therefore learns one
+source to excess $\epsilon$ and failure probability $\delta/k$ from
+\[
+ O\!\left(
+ \frac{d\log(1/\epsilon)+\log(k/\delta)}{\gamma\epsilon}
+ \right)
+\]
+samples \citep{boucheron2005classification,massart2006risk}. Applying it
+independently to all sources and taking a union bound gives the upper
+benchmark stated in the main paper.
+
+\bibliography{references}
+
+\end{document}
