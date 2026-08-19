@@ -39,157 +39,73 @@
 ]
 
 \begin{abstract}
-Personalized multi-distribution learning asks for one predictor per data
-source while exploiting a Bayes classifier shared by all sources. Under
-Massart noise, separate empirical risk minimization uses roughly
-$kd/\epsilon$ samples for $k$ sources and VC dimension $d$. The best known
-dimension-dependent sharing term is only $k\sqrt d/\epsilon$. Its authors ask
-whether higher-order moment matching can close the gap.
+Personalized multi-distribution learning asks for one predictor per data source while exploiting a Bayes classifier shared by all sources. Under Massart noise, separate empirical risk minimization uses roughly $kd/\epsilon$ samples for $k$ sources and VC dimension $d$. The best known dimension-dependent sharing term is only $k\sqrt d/\epsilon$. Its authors ask whether higher-order moment matching can close the gap.
 
-We give a near-linear answer in the high-accuracy regime. For noise bound
-$\eta<1/2$, let $\gamma=1-2\eta$ and
-$z_\eta=2(1-\eta)/\eta-1$. Define
-\[
+We give a near-linear answer in the high-accuracy regime. For noise bound $\eta<1/2$, let $\gamma=1-2\eta$ and $z_\eta=2(1-\eta)/\eta-1$. Define \[
  \begin{aligned}
  K_m(z)&=1+2\sum_{j=1}^m T_j(z)^2,\\
  w_m&=K_m(z_\eta)^{-1},
  \end{aligned}
-\]
-where $T_j$ is a Chebyshev polynomial. Subject to explicit feasibility and
-concentration conditions, every adaptive learner requires
-\[
- \Omega\!\left(
- \frac{k m\gamma w_m}{\epsilon}
- d^{\frac{2m}{2m+1}}
- \right)
-\]
-samples. Consequently, for every fixed $\zeta>0$ the lower bound is
-$\Omega_{\eta,\zeta}(k d^{1-\zeta}/\epsilon)$ at sufficiently high accuracy.
-If $\epsilon$ is polynomially small in $d$, it becomes
-$\Omega_\eta(kd\exp[-C_\eta\sqrt{\log d}]/\epsilon)$. Thus sharing cannot
-yield a polynomial improvement over separate learning in this regime.
+\] where $T_j$ is a Chebyshev polynomial. Subject to explicit feasibility and concentration conditions, every adaptive learner requires \[ \Omega\!\left( \frac{k m\gamma w_m}{\epsilon} d^{\frac{2m}{2m+1}} \right) \] samples. Consequently, for every fixed $\zeta>0$ the lower bound is $\Omega_{\eta,\zeta}(k d^{1-\zeta}/\epsilon)$ at sufficiently high accuracy. If $\epsilon$ is polynomially small in $d$, it becomes $\Omega_\eta(kd\exp[-C_\eta\sqrt{\log d}]/\epsilon)$. Thus sharing cannot yield a polynomial improvement over separate learning in this regime.
 
-The key is an exact external-atom moment theorem. An arcsine law supported on
-label-zero biases admits a moment-matching measure with the maximum possible
-atom $1/K_m(z)$ at a prescribed label-one bias. Matching $2m$ moments delays
-distinguishability until a $(2m+1)$-fold coordinate collision. A randomized
-null and a variance-sensitive holdout then lift this single-source barrier to
-$k$ adaptively sampled sources without increasing VC dimension.
+The key is an exact external-atom moment theorem. An arcsine law supported on label-zero biases admits a moment-matching measure with the maximum possible atom $1/K_m(z)$ at a prescribed label-one bias. Matching $2m$ moments delays distinguishability until a $(2m+1)$-fold coordinate collision. A randomized null and a variance-sensitive holdout then lift this single-source barrier to $k$ adaptively sampled sources without increasing VC dimension.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
-Learning systems often draw data from several populations, environments, or
-clients. Multi-distribution learning formalizes the benefit of choosing which
-source to sample while requiring guarantees across all sources
-\citep{blum2017collaborative,haghtalab2022ondemand}. In the realizable setting,
-a shared classifier lets $k$ sources reduce their total cost from separate
-learning, about $kd/\epsilon$, to nearly $(d+k)/\epsilon$. Analogous additive
-rates are possible in agnostic minimax formulations
-\citep{zhang2024optimal,peng2024sample}.
+Learning systems often draw data from several populations, environments, or clients. Multi-distribution learning formalizes the benefit of choosing which source to sample while requiring guarantees across all sources \citep{blum2017collaborative,haghtalab2022ondemand}. In the realizable setting, a shared classifier lets $k$ sources reduce their total cost from separate learning, about $kd/\epsilon$, to nearly $(d+k)/\epsilon$. Analogous additive rates are possible in agnostic minimax formulations \citep{zhang2024optimal,peng2024sample}.
 
-Bounded label noise lies between these two regimes. Suppose every source has
-the same Bayes classifier $f^\star$ in a class of VC dimension $d$, and its
-pointwise label error is at most $\eta<1/2$. A single source can be learned at
-the fast rate $\widetilde O(d/[\epsilon(1-2\eta)])$. It is natural to ask
-whether the shared Bayes rule preserves the realizable benefit across
-sources.
+Bounded label noise lies between these two regimes. Suppose every source has the same Bayes classifier $f^\star$ in a class of VC dimension $d$, and its pointwise label error is at most $\eta<1/2$. A single source can be learned at the fast rate $\widetilde O(d/[\epsilon(1-2\eta)])$. It is natural to ask whether the shared Bayes rule preserves the realizable benefit across sources.
 
-\citet{hanashiro2026bounded} recently showed that the answer depends on the
-benchmark. If every personalized output must compete with its source's
-unknown Bayes error, an additional
-$\Omega(k\sqrt d/\epsilon)$ term is unavoidable, even though the Bayes
-classifier is shared. Their lower bound draws latent label biases from two
-priors with the same first moment. One sample from a light coordinate has the
-same law under both priors, so a repeated coordinate is needed. The birthday
-threshold gives $\sqrt d$.
+\citet{hanashiro2026bounded} recently showed that the answer depends on the benchmark. If every personalized output must compete with its source's unknown Bayes error, an additional $\Omega(k\sqrt d/\epsilon)$ term is unavoidable, even though the Bayes classifier is shared. Their lower bound draws latent label biases from two priors with the same first moment. One sample from a light coordinate has the same law under both priors, so a repeated coordinate is needed. The birthday threshold gives $\sqrt d$.
 
-This leaves a wide gap from the separate-learning upper bound. The source
-paper explicitly suggests higher-order moment matching, but identifies two
-obstacles. A useful alternative must keep enough mass above $1/2$ to create a
-fixed excess-risk gap. It must also lift to many sources while preserving one
-shared classifier in a class of dimension $d$. A constant fraction of easily
-detectable high coordinates does not reach linear dependence.
+This leaves a wide gap from the separate-learning upper bound. The source paper explicitly suggests higher-order moment matching, but identifies two obstacles. A useful alternative must keep enough mass above $1/2$ to create a fixed excess-risk gap. It must also lift to many sources while preserving one shared classifier in a class of dimension $d$. A constant fraction of easily detectable high coordinates does not reach linear dependence.
 
-We resolve these obstacles up to a subpolynomial factor when accuracy grows
-with dimension. The first ingredient is a sharp truncated moment result that
-may be useful beyond this problem. Begin with the arcsine law on a low-noise
-interval and prescribe an atom outside that interval. The largest atom
-compatible with the first $2m$ moments is the reciprocal Christoffel kernel
-at the external point. This atom decreases exponentially with $m$, at a rate
-that we characterize exactly. We compensate by increasing the total mass of
-the light coordinates. This keeps the excess-risk gap fixed while making the
-high coordinates rarer.
+We resolve these obstacles up to a subpolynomial factor when accuracy grows with dimension. The first ingredient is a sharp truncated moment result that may be useful beyond this problem. Begin with the arcsine law on a low-noise interval and prescribe an atom outside that interval. The largest atom compatible with the first $2m$ moments is the reciprocal Christoffel kernel at the external point. This atom decreases exponentially with $m$, at a rate that we characterize exactly. We compensate by increasing the total mass of the light coordinates. This keeps the excess-risk gap fixed while making the high coordinates rarer.
 
-The second ingredient turns moment matching into passive sample hardness.
-After Poissonization, the label counts at a coordinate have likelihood
-proportional to an expected degree-$s+t$ polynomial of the latent bias.
-Matching $2m$ moments makes all count pairs with total at most $2m$ identical.
-Distinguishing requires a $(2m+1)$-fold collision, whose threshold is
-$d^{2m/(2m+1)}$ \citep{wu2020polynomial,canonne2026short}.
+The second ingredient turns moment matching into passive sample hardness. After Poissonization, the label counts at a coordinate have likelihood proportional to an expected degree-$s+t$ polynomial of the latent bias. Matching $2m$ moments makes all count pairs with total at most $2m$ identical. Distinguishing requires a $(2m+1)$-fold collision, whose threshold is $d^{2m/(2m+1)}$ \citep{wu2020polynomial,canonne2026short}.
 
-Finally, we use disjoint source supports but a single randomized null. A
-source-specific alternative changes one block, and its high-coordinate
-indicator remains a shared Bayes classifier. A fresh holdout converts an
-accurate personalized output into a test. Its variance is of order
-$\epsilon/(1-2\eta)$, so the holdout costs only
-$O(1/[\epsilon(1-2\eta)])$ samples. The resulting test forces the learner to
-pay the collision cost on every source under the same valid null.
+Finally, we use disjoint source supports but a single randomized null. A source-specific alternative changes one block, and its high-coordinate indicator remains a shared Bayes classifier. A fresh holdout converts an accurate personalized output into a test. Its variance is of order $\epsilon/(1-2\eta)$, so the holdout costs only $O(1/[\epsilon(1-2\eta)])$ samples. The resulting test forces the learner to pay the collision cost on every source under the same valid null.
 
 \paragraph{Contributions.}
 Our results are entirely information theoretic.
 \begin{itemize}
 \item We identify an exact external-atom construction for $2m$ truncated
-moments of the arcsine law. The feasible atom has mass $1/K_m(z)$, and no
-larger atom is possible for this null prior.
+moments of the arcsine law. The feasible atom has mass $1/K_m(z)$, and no larger atom is possible for this null prior.
 \item We obtain a parameterized personalized Massart lower bound with
-dimension exponent $2m/(2m+1)$. It applies to adaptive source selection and
-improper, randomized outputs.
+dimension exponent $2m/(2m+1)$. It applies to adaptive source selection and improper, randomized outputs.
 \item Optimizing the moment order gives
-$kd\exp[-O_\eta(\sqrt{\log d})]/\epsilon$ at polynomial accuracy. For any
-fixed exponent loss $\zeta$, a fixed-order consequence gives
-$k d^{1-\zeta}/\epsilon$.
+$kd\exp[-O_\eta(\sqrt{\log d})]/\epsilon$ at polynomial accuracy. For any fixed exponent loss $\zeta$, a fixed-order consequence gives $k d^{1-\zeta}/\epsilon$.
 \item The noise dependence is explicit through a Chebyshev kernel. This
-extends the prior constant-noise lower bound and isolates how the high atom
-shrinks as the Massart margin changes.
+extends the prior constant-noise lower bound and isolates how the high atom shrinks as the Massart margin changes.
 \end{itemize}
 
 \section{Personalized Massart Learning}
 \label{sec:setup}
 
-Let $P_1,\ldots,P_k$ be distributions on $\cX\times\{0,1\}$. For a binary
-predictor $f$, write $\err_i(f)=P_i(f(X)\ne Y)$. We assume there is an
-$f^\star\in\cF$ such that, for every $i$ and $x$ in the support of $P_i$,
+Let $P_1,\ldots,P_k$ be distributions on $\cX\times\{0,1\}$. For a binary predictor $f$, write $\err_i(f)=P_i(f(X)\ne Y)$. We assume there is an $f^\star\in\cF$ such that, for every $i$ and $x$ in the support of $P_i$,
 \begin{equation}
  P_i(Y\ne f^\star(X)\mid X=x)\le\eta<\frac12.
  \label{eq:massart}
 \end{equation}
-Hence $f^\star$ is Bayes optimal on every source. Let
-$\eta_i^\star=\err_i(f^\star)$.
+Hence $f^\star$ is Bayes optimal on every source. Let $\eta_i^\star=\err_i(f^\star)$.
 
-A personalized learner adaptively chooses source indices and receives an
-independent labeled sample from the chosen source. It returns arbitrary
-possibly randomized predictors $\widehat f_1,\ldots,\widehat f_k$. Success
-means
+A personalized learner adaptively chooses source indices and receives an independent labeled sample from the chosen source. It returns arbitrary possibly randomized predictors $\widehat f_1,\ldots,\widehat f_k$. Success means
 \begin{equation}
  \max_{i\in[k]}\{\err_i(\widehat f_i)-\eta_i^\star\}\le\epsilon
  \label{eq:objective}
 \end{equation}
-with probability at least $1-\delta$. This is the \textsc{MDL-Mass}
-objective of \citet{hanashiro2026bounded}. Our lower bound allows improper
-outputs and fully adaptive source choices.
+with probability at least $1-\delta$. This is the \textsc{MDL-Mass} objective of \citet{hanashiro2026bounded}. Our lower bound allows improper outputs and fully adaptive source choices.
 
-Write $\gamma=1-2\eta$. Learning each source separately by VC empirical risk
-minimization gives the benchmark
+Write $\gamma=1-2\eta$. Learning each source separately by VC empirical risk minimization gives the benchmark
 \begin{equation}
  O\!\left(
  \frac{k[d\log(1/\epsilon)+\log(k/\delta)]}{\gamma\epsilon}
  \right).
  \label{eq:separate}
 \end{equation}
-The fast $1/\epsilon$ dependence follows from the Massart variance condition
-\citep{massart2006risk,boucheron2005classification}.
+The fast $1/\epsilon$ dependence follows from the Massart variance condition \citep{massart2006risk,boucheron2005classification}.
 
 Let $T_j$ denote the degree-$j$ Chebyshev polynomial of the first kind. Define
 \begin{align}
@@ -204,25 +120,17 @@ The kernel has a useful closed form. With $A_\eta=\operatorname{arcosh}(z_\eta)$
  \frac{\sinh((2m+1)A_\eta)}{2\sinh(A_\eta)}.
  \label{eq:kernel-closed}
 \end{equation}
-In terms of the Massart margin,
-$z_\eta=(1+3\gamma)/(1-\gamma)$ and
-$A_\eta=\sqrt{8\gamma}(1+O(\gamma))$ as $\gamma\downarrow0$. The exact form
-shows two regimes. If $mA_\eta\le1$, then $K_m=\Theta(m)$. If
-$mA_\eta\ge1$, its growing term is of order
-$e^{(2m+1)A_\eta}/\sinh(A_\eta)$. Thus the construction records how many
-moments can be matched before the prescribed label switch becomes too rare.
+In terms of the Massart margin, $z_\eta=(1+3\gamma)/(1-\gamma)$ and $A_\eta=\sqrt{8\gamma}(1+O(\gamma))$ as $\gamma\downarrow0$. The exact form shows two regimes. If $mA_\eta\le1$, then $K_m=\Theta(m)$. If $mA_\eta\ge1$, its growing term is of order $e^{(2m+1)A_\eta}/\sinh(A_\eta)$. Thus the construction records how many moments can be matched before the prescribed label switch becomes too rare.
 
 \begin{theorem}[Parameterized lower bound]
 \label{thm:main}
-There are universal constants $c,C>0$ with the following property. Fix
-$\eta\in(0,1/2)$ and an integer $m\ge1$. If
+There are universal constants $c,C>0$ with the following property. Fix $\eta\in(0,1/2)$ and an integer $m\ge1$. If
 \begin{align}
  \epsilon&\le c\gamma w_m,\label{eq:cond-eps}\\
  dw_m&\ge C,\label{eq:cond-count}\\
  m\gamma^2w_m d^{\frac{2m}{2m+1}}&\ge C,\label{eq:cond-holdout}
 \end{align}
-then there is a binary class of VC dimension exactly $d$ for which every
-learner satisfying \eqref{eq:objective} with probability at least $0.9$ uses
+then there is a binary class of VC dimension exactly $d$ for which every learner satisfying \eqref{eq:objective} with probability at least $0.9$ uses
 \begin{equation}
  \Omega\!\left(
  \frac{k m\gamma w_m}{\epsilon}
@@ -233,18 +141,11 @@ learner satisfying \eqref{eq:objective} with probability at least $0.9$ uses
 samples in the worst case.
 \end{theorem}
 
-The three conditions have separate roles. Equation~\eqref{eq:cond-eps} keeps
-the hard distribution normalized. Equation~\eqref{eq:cond-count} concentrates
-the number of high coordinates. Equation~\eqref{eq:cond-holdout} makes the
-collision barrier dominate the final validation cost. All hold for the
-optimized choice below when $\eta$ is fixed and $\epsilon$ is polynomially
-small in $d$.
+The three conditions have separate roles. Equation~\eqref{eq:cond-eps} keeps the hard distribution normalized. Equation~\eqref{eq:cond-count} concentrates the number of high coordinates. Equation~\eqref{eq:cond-holdout} makes the collision barrier dominate the final validation cost. All hold for the optimized choice below when $\eta$ is fixed and $\epsilon$ is polynomially small in $d$.
 
 \begin{corollary}[No polynomial gain from sharing]
 \label{cor:power}
-Fix $\eta\in(0,1/2)$ and $\zeta>0$. There are positive constants
-$c_{\eta,\zeta}$ and $C_{\eta,\zeta}$ such that, whenever
-$\epsilon\le c_{\eta,\zeta}$ and $d\ge C_{\eta,\zeta}$, the lower bound is
+Fix $\eta\in(0,1/2)$ and $\zeta>0$. There are positive constants $c_{\eta,\zeta}$ and $C_{\eta,\zeta}$ such that, whenever $\epsilon\le c_{\eta,\zeta}$ and $d\ge C_{\eta,\zeta}$, the lower bound is
 \begin{equation}
  \Omega_{\eta,\zeta}\!\left(\frac{k d^{1-\zeta}}{\epsilon}\right).
  \label{eq:power}
@@ -253,8 +154,7 @@ $\epsilon\le c_{\eta,\zeta}$ and $d\ge C_{\eta,\zeta}$, the lower bound is
 
 \begin{corollary}[Polynomial accuracy]
 \label{cor:optimized}
-Fix $\eta\in(0,1/2)$ and $\beta>0$. For all sufficiently large $d$, if
-$\epsilon\le d^{-\beta}$, every personalized learner can require
+Fix $\eta\in(0,1/2)$ and $\beta>0$. For all sufficiently large $d$, if $\epsilon\le d^{-\beta}$, every personalized learner can require
 \begin{equation}
  \Omega_{\eta,\beta}\!\left(
  \frac{kd}{\epsilon}
@@ -265,20 +165,9 @@ $\epsilon\le d^{-\beta}$, every personalized learner can require
 samples.
 \end{corollary}
 
-Corollary~\ref{cor:power} follows by fixing $m$ with
-$(2m+1)^{-1}\le\zeta$. For Corollary~\ref{cor:optimized}, take
-$2m\asymp\sqrt{\log(d)/A_\eta}$. Equation~\eqref{eq:kernel-closed} gives
-$K_m\le C_\eta e^{2mA_\eta}$. The losses
-$2mA_\eta$ and $\log(d)/(2m+1)$ balance at order $\sqrt{\log d}$. Polynomial
-accuracy makes \eqref{eq:cond-eps} eventually valid, and the other two left
-sides diverge. Comparison with \eqref{eq:separate} shows that the remaining
-gap is subpolynomial in $d$, apart from logarithms.
+Corollary~\ref{cor:power} follows by fixing $m$ with $(2m+1)^{-1}\le\zeta$. For Corollary~\ref{cor:optimized}, take $2m\asymp\sqrt{\log(d)/A_\eta}$. Equation~\eqref{eq:kernel-closed} gives $K_m\le C_\eta e^{2mA_\eta}$. The losses $2mA_\eta$ and $\log(d)/(2m+1)$ balance at order $\sqrt{\log d}$. Polynomial accuracy makes \eqref{eq:cond-eps} eventually valid, and the other two left sides diverge. Comparison with \eqref{eq:separate} shows that the remaining gap is subpolynomial in $d$, apart from logarithms.
 
-Table~\ref{tab:orders} displays the exact tradeoff at the canonical noise
-bound $\eta=0.49$ used by \citet{hanashiro2026bounded}. Each additional moment
-order raises the collision exponent but reduces the external atom, which in
-turn tightens the accuracy condition. These are evaluations of
-\eqref{eq:kernel}, not fitted or simulated values.
+Table~\ref{tab:orders} displays the exact tradeoff at the canonical noise bound $\eta=0.49$ used by \citet{hanashiro2026bounded}. Each additional moment order raises the collision exponent but reduces the external atom, which in turn tightens the accuracy condition. These are evaluations of \eqref{eq:kernel}, not fitted or simulated values.
 
 \begin{table}[t]
 \centering
@@ -304,36 +193,26 @@ Let $\sigma$ be the arcsine probability measure on $[-1,1]$,
  d\sigma(u)=\frac{du}{\pi\sqrt{1-u^2}}.
  \label{eq:arcsine}
 \end{equation}
-Its orthonormal polynomials are $\phi_0=1$ and
-$\phi_j=\sqrt2T_j$ for $j\ge1$. Thus $K_m(z)$ in \eqref{eq:kernel} is its
-degree-$m$ Christoffel kernel evaluated at $z$.
+Its orthonormal polynomials are $\phi_0=1$ and $\phi_j=\sqrt2T_j$ for $j\ge1$. Thus $K_m(z)$ in \eqref{eq:kernel} is its degree-$m$ Christoffel kernel evaluated at $z$.
 
 \begin{lemma}[Exact external-atom moments]
 \label{lem:moment}
-For every $z>1$ and $m\ge1$, there is a probability measure $\nu_m$ supported
-on $[-1,1]$ such that
+For every $z>1$ and $m\ge1$, there is a probability measure $\nu_m$ supported on $[-1,1]$ such that
 \begin{equation}
  \sigma_1=\frac1{K_m(z)}\delta_z+
  \left(1-\frac1{K_m(z)}\right)\nu_m
  \label{eq:moment-pair}
 \end{equation}
-matches the moments of $\sigma$ through degree $2m$. Moreover,
-$1/K_m(z)$ is the largest possible mass at $z$ among all matching probability
-measures whose remaining mass is supported on $[-1,1]$.
+matches the moments of $\sigma$ through degree $2m$. Moreover, $1/K_m(z)$ is the largest possible mass at $z$ among all matching probability measures whose remaining mass is supported on $[-1,1]$.
 \end{lemma}
 
 \begin{proof}
-Set $w=1/K_m(z)$ and define, on polynomials of degree at most $2m$,
-\[
- L(P)=\int P\,d\sigma-wP(z).
-\]
-Every $P\ge0$ on $[-1,1]$ has a Markov--Lukacs representation
+Set $w=1/K_m(z)$ and define, on polynomials of degree at most $2m$, \[ L(P)=\int P\,d\sigma-wP(z). \] Every $P\ge0$ on $[-1,1]$ has a Markov--Lukacs representation
 \begin{equation}
  P(u)=s(u)^2+(1-u^2)t(u)^2,
  \label{eq:lukacs}
 \end{equation}
-where $\deg(s)\le m$ and $\deg(t)\le m-1$
-\citep[Section 2.5]{wu2020polynomial}. The reproducing-kernel inequality gives
+where $\deg(s)\le m$ and $\deg(t)\le m-1$ \citep[Section 2.5]{wu2020polynomial}. The reproducing-kernel inequality gives
 \begin{equation}
  s(z)^2\le K_m(z)\int s^2\,d\sigma.
  \label{eq:christoffel}
@@ -343,42 +222,27 @@ Since $z>1$, equations \eqref{eq:lukacs} and \eqref{eq:christoffel} imply
  L(P)&=\int s^2d\sigma-ws(z)^2+\int(1-u^2)t^2d\sigma\\
  &\quad+w(z^2-1)t(z)^2\ge0.
 \end{align*}
-The truncated Riesz representation theorem gives a nonnegative representing
-measure on $[-1,1]$ for $L$. Its mass is $L(1)=1-w$. Normalizing proves
-\eqref{eq:moment-pair}.
+The truncated Riesz representation theorem gives a nonnegative representing measure on $[-1,1]$ for $L$. Its mass is $L(1)=1-w$. Normalizing proves \eqref{eq:moment-pair}.
 
-For maximality, any matching measure with atom $w'$ at $z$ satisfies
-$w's(z)^2\le\int s^2d\sigma$ for every degree-$m$ polynomial $s$. Taking the
-reproducing kernel $s(u)=\sum_{j=0}^m\phi_j(z)\phi_j(u)$ gives
-$w'\le1/K_m(z)$.
+For maximality, any matching measure with atom $w'$ at $z$ satisfies $w's(z)^2\le\int s^2d\sigma$ for every degree-$m$ polynomial $s$. Taking the reproducing kernel $s(u)=\sum_{j=0}^m\phi_j(z)\phi_j(u)$ gives $w'\le1/K_m(z)$.
 \end{proof}
 
-Map $u\mapsto\eta(u+1)/2$. The null law $\mu_0$ is supported on
-$[0,\eta]$, while the external point $z_\eta$ maps to $1-\eta$. Lemma
-\ref{lem:moment} produces
+Map $u\mapsto\eta(u+1)/2$. The null law $\mu_0$ is supported on $[0,\eta]$, while the external point $z_\eta$ maps to $1-\eta$. Lemma \ref{lem:moment} produces
 \begin{equation}
  \mu_1=w_m\delta_{1-\eta}+(1-w_m)\nu_m,
  \qquad \operatorname{supp}(\nu_m)\subseteq[0,\eta],
  \label{eq:bias-priors}
 \end{equation}
-with moments matching through order $2m$. Every null bias favors label zero.
-The distinguished alternative atom favors label one, and both have Massart
-margin exactly $\gamma$ at the closest endpoints.
+with moments matching through order $2m$. Every null bias favors label zero. The distinguished alternative atom favors label one, and both have Massart margin exactly $\gamma$ at the closest endpoints.
 
 \section{Collisions Hide the Bayes Rule}
 \label{sec:testing}
 
-Consider a domain $\{0,1,\ldots,d\}$. Put covariate mass $1-\alpha$ at zero
-and $\alpha/d$ at each light coordinate. The bias at zero is fixed below
-$1/2$. At each light coordinate $x$, draw $q_x$ independently from $\mu_h$
-for $h\in\{0,1\}$, then keep $q_x$ fixed and draw
-$Y\mid X=x\sim\Ber(q_x)$ on every visit. This fixed latent bias is what makes
-coordinate collisions informative.
+Consider a domain $\{0,1,\ldots,d\}$. Put covariate mass $1-\alpha$ at zero and $\alpha/d$ at each light coordinate. The bias at zero is fixed below $1/2$. At each light coordinate $x$, draw $q_x$ independently from $\mu_h$ for $h\in\{0,1\}$, then keep $q_x$ fixed and draw $Y\mid X=x\sim\Ber(q_x)$ on every visit. This fixed latent bias is what makes coordinate collisions informative.
 
 \begin{lemma}[Moment-collision testing]
 \label{lem:testing}
-Any test between these two random environments with both errors at most
-$1/5$ requires
+Any test between these two random environments with both errors at most $1/5$ requires
 \begin{equation}
  \Omega\!\left(
  \frac{m}{\alpha}d^{\frac{2m}{2m+1}}
@@ -389,33 +253,18 @@ samples, provided the displayed quantity exceeds a universal constant.
 \end{lemma}
 
 \begin{proof}[Proof idea]
-Poissonize the sample count with mean $N$. At one light coordinate, the counts
-of labels one and zero have conditional law
-\[
- \Poi(\lambda q)\otimes\Poi(\lambda(1-q)),
- \qquad \lambda=N\alpha/d.
-\]
-The mixed probability of a count pair $(s,t)$ is
+Poissonize the sample count with mean $N$. At one light coordinate, the counts of labels one and zero have conditional law \[ \Poi(\lambda q)\otimes\Poi(\lambda(1-q)), \qquad \lambda=N\alpha/d. \] The mixed probability of a count pair $(s,t)$ is
 \begin{equation}
  \frac{e^{-\lambda}\lambda^{s+t}}{s!t!}
  \E[q^t(1-q)^s].
  \label{eq:count-likelihood}
 \end{equation}
-This expectation is a polynomial of degree $s+t$. The two laws agree for
-$s+t\le2m$. Their total count is $\Poi(\lambda)$ under both priors. Product
-subadditivity therefore gives
+This expectation is a polynomial of degree $s+t$. The two laws agree for $s+t\le2m$. Their total count is $\Poi(\lambda)$ under both priors. Product subadditivity therefore gives
 \begin{equation}
  \TV(Q_0,Q_1)\le d\,\PP(\Poi(\lambda)\ge2m+1).
  \label{eq:product-tv}
 \end{equation}
-For
-\[
- N\le \frac{2m+1}{4e\alpha}d^{\frac{2m}{2m+1}},
-\]
-the Poisson Chernoff bound makes \eqref{eq:product-tv} at most
-$4^{-(2m+1)}\le1/64$. A standard lower-tail coupling converts any
-fixed-budget test into a Poissonized test at constant overhead. Full constants
-are in the supplement.
+For \[ N\le \frac{2m+1}{4e\alpha}d^{\frac{2m}{2m+1}}, \] the Poisson Chernoff bound makes \eqref{eq:product-tv} at most $4^{-(2m+1)}\le1/64$. A standard lower-tail coupling converts any fixed-budget test into a Poissonized test at constant overhead. Full constants are in the supplement.
 \end{proof}
 
 Set
@@ -423,126 +272,65 @@ Set
  \alpha=\frac{16\epsilon}{\gamma w_m}.
  \label{eq:alpha}
 \end{equation}
-Condition \eqref{eq:cond-eps} ensures $\alpha\le1$. Under the null, zero is
-Bayes optimal. Under the alternative, let $H$ count coordinates at the atom
-$1-\eta$. Then $H\sim\operatorname{Bin}(d,w_m)$. Condition
-\eqref{eq:cond-count} and a Chernoff bound make
+Condition \eqref{eq:cond-eps} ensures $\alpha\le1$. Under the null, zero is Bayes optimal. Under the alternative, let $H$ count coordinates at the atom $1-\eta$. Then $H\sim\operatorname{Bin}(d,w_m)$. Condition \eqref{eq:cond-count} and a Chernoff bound make
 \begin{equation}
  \frac{dw_m}{2}\le H\le2dw_m
  \label{eq:high-event}
 \end{equation}
-hold with constant high probability. On this event, the high-coordinate
-indicator is Bayes, while zero has excess
+hold with constant high probability. On this event, the high-coordinate indicator is Bayes, while zero has excess
 \begin{equation}
  \Delta_0=\frac{\alpha\gamma H}{d}\in[8\epsilon,32\epsilon].
  \label{eq:gap}
 \end{equation}
-Combining \eqref{eq:test-lower} and \eqref{eq:alpha} gives the one-source cost
-$\Omega(m\gamma w_m d^{2m/(2m+1)}/\epsilon)$.
+Combining \eqref{eq:test-lower} and \eqref{eq:alpha} gives the one-source cost $\Omega(m\gamma w_m d^{2m/(2m+1)}/\epsilon)$.
 
 \section{Forcing the Cost on Every Source}
 \label{sec:lifting}
 
-Take $k$ disjoint blocks $\cX_1,\ldots,\cX_k$, each containing one heavy and
-$d$ light points. Let $\cF$ contain the zero function and every indicator of
-a subset of one block's light points. It shatters a light block. No set of
-$d+1$ points is shattered. A set containing a heavy point cannot label that
-point one, and a light-only set spanning two blocks cannot label points in
-both blocks one. Hence $\operatorname{VCdim}(\cF)=d$.
+Take $k$ disjoint blocks $\cX_1,\ldots,\cX_k$, each containing one heavy and $d$ light points. Let $\cF$ contain the zero function and every indicator of a subset of one block's light points. It shatters a light block. No set of $d+1$ points is shattered. A set containing a heavy point cannot label that point one, and a light-only set spanning two blocks cannot label points in both blocks one. Hence $\operatorname{VCdim}(\cF)=d$.
 
-Each source is supported on its corresponding block with the marginal used
-in Section~\ref{sec:testing}. Under the common null, independently draw one
-fixed $\mu_0^d$ bias vector for every block. Every realization is a valid
-Massart instance with shared Bayes classifier zero.
+Each source is supported on its corresponding block with the marginal used in Section~\ref{sec:testing}. Under the common null, independently draw one fixed $\mu_0^d$ bias vector for every block. Every realization is a valid Massart instance with shared Bayes classifier zero.
 
-For the source-$i$ alternative, replace only its bias prior by $\mu_1^d$.
-The Bayes classifier is the indicator of source $i$'s high coordinates. It
-belongs to $\cF$ and equals zero on every other source support, where it is
-also Bayes. Thus every realized alternative still has one shared classifier.
+For the source-$i$ alternative, replace only its bias prior by $\mu_1^d$. The Bayes classifier is the indicator of source $i$'s high coordinates. It belongs to $\cF$ and equals zero on every other source support, where it is also Bayes. Thus every realized alternative still has one shared classifier.
 
-It remains to turn a learner into the test from Lemma~\ref{lem:testing}. Let
-$\widehat f_i$ be an $\epsilon$-optimal output and define on a fresh
-source-$i$ sample
+It remains to turn a learner into the test from Lemma~\ref{lem:testing}. Let $\widehat f_i$ be an $\epsilon$-optimal output and define on a fresh source-$i$ sample
 \begin{equation}
  Z=\1\{f_0(X)\ne Y\}-\1\{\widehat f_i(X)\ne Y\},
  \label{eq:validation-variable}
 \end{equation}
-where $f_0$ is zero. Under the null, $\E Z\in[-\epsilon,0]$. Under an
-alternative satisfying \eqref{eq:high-event},
-$\E Z\ge\Delta_0-\epsilon\ge7\epsilon$.
+where $f_0$ is zero. Under the null, $\E Z\in[-\epsilon,0]$. Under an alternative satisfying \eqref{eq:high-event}, $\E Z\ge\Delta_0-\epsilon\ge7\epsilon$.
 
-The Massart margin controls validation variance. For any predictor $f$ with
-excess at most $\epsilon$,
+The Massart margin controls validation variance. For any predictor $f$ with excess at most $\epsilon$,
 \begin{equation}
  P_i(f(X)\ne f^\star(X))\le\epsilon/\gamma.
  \label{eq:disagreement}
 \end{equation}
-On \eqref{eq:high-event}, zero disagrees with Bayes on mass at most
-$2\alpha w_m=32\epsilon/\gamma$. Therefore
+On \eqref{eq:high-event}, zero disagrees with Bayes on mass at most $2\alpha w_m=32\epsilon/\gamma$. Therefore
 \begin{equation}
  \operatorname{Var}(Z)\le
  P_i(f_0(X)\ne\widehat f_i(X))\le33\epsilon/\gamma.
  \label{eq:validation-variance}
 \end{equation}
-Bernstein's inequality estimates $\E Z$ to $2\epsilon$ from
-$O(1/(\gamma\epsilon))$ fresh samples. Thresholding at $3\epsilon$ separates
-the two priors.
+Bernstein's inequality estimates $\E Z$ to $2\epsilon$ from $O(1/(\gamma\epsilon))$ fresh samples. Thresholding at $3\epsilon$ separates the two priors.
 
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
-Let $L$ be a sufficiently small constant times the one-source lower bound.
-Fix source $i$, and run the MDL learner with source $i$ supplied by an unknown
-testing environment. Simulate all other sources from independent null draws.
-If the learner asks for $L/2$ samples from source $i$, truncate and declare the
-alternative. If it finishes first, run the holdout test above.
+Let $L$ be a sufficiently small constant times the one-source lower bound. Fix source $i$, and run the MDL learner with source $i$ supplied by an unknown testing environment. Simulate all other sources from independent null draws. If the learner asks for $L/2$ samples from source $i$, truncate and declare the alternative. If it finishes first, run the holdout test above.
 
-Suppose the learner's expected source-$i$ count under the common null were
-$o(L)$. Markov's inequality makes truncation rare under the null. Learner
-success and holdout concentration then make the test accept with constant
-high probability. Under the alternative, truncation is already a correct
-decision. Without truncation, event \eqref{eq:high-event}, learner success,
-and holdout concentration make the test reject with constant high
-probability.
+Suppose the learner's expected source-$i$ count under the common null were $o(L)$. Markov's inequality makes truncation rare under the null. Learner success and holdout concentration then make the test accept with constant high probability. Under the alternative, truncation is already a correct decision. Without truncation, event \eqref{eq:high-event}, learner success, and holdout concentration make the test reject with constant high probability.
 
-The test uses at most $L/2+O(1/(\gamma\epsilon))$ samples from its unknown
-oracle. Condition \eqref{eq:cond-holdout} makes this less than the threshold
-in Lemma~\ref{lem:testing}, a contradiction. Hence the expected count from
-every source is $\Omega(L)$ under the same common randomized null. Summing
-over $i$ proves \eqref{eq:main-bound}. Pointwise correctness of the learner
-justifies averaging over this null prior.
+The test uses at most $L/2+O(1/(\gamma\epsilon))$ samples from its unknown oracle. Condition \eqref{eq:cond-holdout} makes this less than the threshold in Lemma~\ref{lem:testing}, a contradiction. Hence the expected count from every source is $\Omega(L)$ under the same common randomized null. Summing over $i$ proves \eqref{eq:main-bound}. Pointwise correctness of the learner justifies averaging over this null prior.
 \end{proof}
 
 \section{Context and Limitations}
 \label{sec:discussion}
 
-The moment-pair technique is classical. Polynomial approximation and moment
-duality underlie many sharp statistical lower bounds
-\citep{wu2019chebyshev,wu2020polynomial}. Recent exposition makes explicit
-that matching $r$ moments delays testing until an $(r+1)$-fold collision
-\citep{canonne2026short}. Our external-atom lemma identifies the exact atom
-compatible with the arcsine moments, then uses it to resolve the open
-dimension exponent in personalized Massart learning up to a subpolynomial
-factor.
+The moment-pair technique is classical. Polynomial approximation and moment duality underlie many sharp statistical lower bounds \citep{wu2019chebyshev,wu2020polynomial}. Recent exposition makes explicit that matching $r$ moments delays testing until an $(r+1)$-fold collision \citep{canonne2026short}. Our external-atom lemma identifies the exact atom compatible with the arcsine moments, then uses it to resolve the open dimension exponent in personalized Massart learning up to a subpolynomial factor.
 
-Most MDL results optimize one hypothesis against the worst source
-\citep{haghtalab2022ondemand,zhang2024optimal,peng2024sample}. Personalized
-realizable learning admits additive dependence on $d$ and $k$
-\citep{blum2017collaborative}. If different sources may have different target
-classifiers, separate-learning dependence can return
-\citep{deng2024different}. Here the target is shared. The hardness comes only
-from adapting to each source's unknown Bayes error. Active and limited-round
-MDL address complementary access restrictions
-\citep{zhang2025active,haghtalab2025adaptivity}.
+Most MDL results optimize one hypothesis against the worst source \citep{haghtalab2022ondemand,zhang2024optimal,peng2024sample}. Personalized realizable learning admits additive dependence on $d$ and $k$ \citep{blum2017collaborative}. If different sources may have different target classifiers, separate-learning dependence can return \citep{deng2024different}. Here the target is shared. The hardness comes only from adapting to each source's unknown Bayes error. Active and limited-round MDL address complementary access restrictions \citep{zhang2025active,haghtalab2025adaptivity}.
 
-The accuracy condition is substantive. At fixed $\epsilon$, increasing $m$
-eventually makes the external atom too rare to maintain the risk gap while
-keeping $\alpha\le1$. Our theorem then gives a fixed exponent below one, not a
-uniform $d^{1-o(1)}$ statement. Determining the exact joint frontier for fixed
-accuracy remains open. The explicit kernel may help with that question.
+The accuracy condition is substantive. At fixed $\epsilon$, increasing $m$ eventually makes the external atom too rare to maintain the risk gap while keeping $\alpha\le1$. Our theorem then gives a fixed exponent below one, not a uniform $d^{1-o(1)}$ statement. Determining the exact joint frontier for fixed accuracy remains open. The explicit kernel may help with that question.
 
-Our lower bound is also information theoretic. It does not impose round,
-properness, or computational restrictions, and it does not propose a better
-algorithm. Its comparison point is separate ERM, which already matches the
-new lower bound up to a subpolynomial dimension factor in the stated regime.
+Our lower bound is also information theoretic. It does not impose round, properness, or computational restrictions, and it does not propose a better algorithm. Its comparison point is separate ERM, which already matches the new lower bound up to a subpolynomial dimension factor in the stated regime.
 
 \bibliography{references}
 

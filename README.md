@@ -8,7 +8,7 @@ $$\begin{aligned} K_m(z)&=1+2\sum_{j=1}^m T_j(z)^2,\\\\ w_m&=K_m(z_\eta)^{-1}, \
 
  where $T_j$ is a Chebyshev polynomial. Subject to explicit feasibility and concentration conditions, every adaptive learner requires 
 
-$$\Omega\\\\\\!\left( \frac{k m\gamma w_m}{\epsilon} d^{\frac{2m}{2m+1}} \right)$$
+$$\Omega\\!\left( \frac{k m\gamma w_m}{\epsilon} d^{\frac{2m}{2m+1}} \right)$$
 
  samples. Consequently, for every fixed $\zeta>0$ the lower bound is $\Omega_{\eta,\zeta}(k d^{1-\zeta}/\epsilon)$ at sufficiently high accuracy. If $\epsilon$ is polynomially small in $d$, it becomes $\Omega_\eta(kd\exp[-C_\eta\sqrt{\log d}]/\epsilon)$. Thus sharing cannot yield a polynomial improvement over separate learning in this regime. The key is an exact external-atom moment theorem. An arcsine law supported on label-zero biases admits a moment-matching measure with the maximum possible atom $1/K_m(z)$ at a prescribed label-one bias. Matching $2m$ moments delays distinguishability until a $(2m+1)$-fold coordinate collision. A randomized null and a variance-sensitive holdout then lift this single-source barrier to $k$ adaptively sampled sources without increasing VC dimension.
 
