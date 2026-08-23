@@ -34,5 +34,6 @@ Massart noise, multi-distribution learning, lower bounds, personalized learning,
 
 ## Files
 
+- `main_2026-08-11.pdf`, the paper as first published, with its OpenTimestamps proof `main_2026-08-11.pdf.ots`.
+- `supplement_2026-08-11.pdf`, the supplement as first published, with its OpenTimestamps proof `supplement_2026-08-11.pdf.ots`.
 - source: `aistats2027.sty`, `main_2026-08-11.tex`, `references.bib`, `supplement_2026-08-11.tex`.
-- also: `main_2026-08-11.pdf`, `supplement_2026-08-11.pdf`.
